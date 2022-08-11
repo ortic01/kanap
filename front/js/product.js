@@ -57,6 +57,7 @@ function validation() {
         // console.log("clic sur boutton")
         ajoutPanier()
 
+
       
     })
 }
@@ -67,15 +68,34 @@ function ajoutPanier() {
         alert("selectionner une couleur")
         return ;
     }
-    let quantity = itemQuantity.value
+    let quantity = Number(itemQuantity.value)
     if(quantity < 1 || quantity > 100 ) {
         alert("selectionner un nombre entre 1 et 100")
         return ;
     }
     let element = {id: product._id, color: color, quantity: quantity}
     let panier = getPanier()
-    panier.push(element)
+// recherche si le produit existe dans le panier    
+    let produitExistent = panier.find(
+        (prod) => prod.id == product._id && prod.color == color
+    ) 
+
+    if(produitExistent == null) {
+    // si le produit existe pas dans le panier, on le rajoute    
+        panier.push(element)
+    }else{
+    // si le produit existe et que sa quantité + la nouvelle quantité > 100, on affiche un message d erreur   
+     if(produitExistent.quantity+quantity > 100) {
+        alert("impossible d ajouter plus de 100 produits existent")
+        return;
+     }else{
+    // si le produit existe et que sa quantité + la nouvelle quantité < 100, on mais a jours sa quantité    
+        produitExistent.quantity = produitExistent.quantity+quantity
+     }
+    }
+    
     localStorage.setItem("panier", JSON.stringify(panier))
+    alert("le produit  a été ajoutée")
 }
 
 function getPanier() {
@@ -88,6 +108,8 @@ function getPanier() {
     }
     
 }
+
+
 validation()
 
 
