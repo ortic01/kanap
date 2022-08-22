@@ -73,7 +73,7 @@ function ajoutPanier() {
         alert("selectionner un nombre entre 1 et 100")
         return ;
     }
-    let element = {id: product_id, color: color, quantity: quantity}
+    let element = {id: product._id, color: color, quantity: quantity}
     let panier = getPanier()
 // recherche si le produit existe dans le panier    
     let produitExistent = panier.find(
