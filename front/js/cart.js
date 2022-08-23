@@ -114,7 +114,6 @@ let productTotalPrice = 0
 
 // insertion du prix total
 function priceTotal() {
-   
     productTotalPrice = productLocalStorage.reduce((total, product) => total + product.price * product.quantity, 0)
     totalPrice.textContent = productTotalPrice
 }
@@ -122,16 +121,13 @@ function priceTotal() {
 
 // insertion de la quantité total
 function quantityTotal() {
-    
     productTotalQuantity = productLocalStorage.reduce((total, product) => total + product.quantity, 0)
     totalQuantity.textContent = productTotalQuantity
 }
 
 
-
 // changement de la nouvelle quantité + prix
 function changePriceAndQuantity (id, newValue, price, color) {
-    
     let canapetoUpdate = productLocalStorage.find(canape => canape.id === id && canape.color === color)
     let difference = newValue - canapetoUpdate.quantity
     productTotalPrice = productTotalPrice + difference * price
@@ -144,10 +140,7 @@ function changePriceAndQuantity (id, newValue, price, color) {
 }
 // supprimer un produit en modifiant la quantité et le prix total
 function deleteProduct(id, color, price) {
-    console.log(id)
-    console.log(color)
     let article = document.querySelector('article[data-id="' + id + '"][data-color="' + color + '"]')
-    console.log(article)
     let canapetoUpdate = productLocalStorage.find(canape => canape.id === id && canape.color === color)
     productTotalPrice = productTotalPrice - canapetoUpdate.quantity * price
     totalPrice.textContent = productTotalPrice
@@ -156,10 +149,10 @@ function deleteProduct(id, color, price) {
     quantityTotal()
     article.remove()
 }  
-
+let validations = []
 // insertion formulaire 
 function getForm() {
-    
+    // ajoute la class cart__order__form
     let form = document.querySelector(".cart__order__form");
 
     //Création des expressions régulières
@@ -167,29 +160,29 @@ function getForm() {
     let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
     let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 
-    
+    // Ecoute de la modification du prénom
     form.firstName.addEventListener('change', function() {
-        validFirstName(this);
+        validations[0] = validFirstName(this);
     });
 
-    
+    // Ecoute de la modification du nom
     form.lastName.addEventListener('change', function() {
-        validLastName(this);
+        validations[1] =  validLastName(this);
     });
 
-    
+    // Ecoute de la modification de l'adresse
     form.address.addEventListener('change', function() {
-        validAddress(this);
+        validations[2] =  validAddress(this);
     });
 
-    
+    // Ecoute de la modification ville
     form.city.addEventListener('change', function() {
-        validCity(this);
+        validations[3] = validCity(this);
     });
 
-   
+   // Ecoute de la modification de l'adresse email
     form.email.addEventListener('change', function() {
-        validEmail(this);
+        validations[4] = validEmail(this);
     });
 
     //validation du prénom
@@ -198,8 +191,10 @@ function getForm() {
 
         if (charRegExp.test(inputFirstName.value.trim())) {
             firstNameErrorMsg.textContent = '';
+            return true
         } else {
             firstNameErrorMsg.textContent = 'Veuillez renseigner ce champ.';
+            return false
         }
     };
 
@@ -209,8 +204,10 @@ function getForm() {
 
         if (charRegExp.test(inputLastName.value.trim())) {
             lastNameErrorMsg.textContent = '';
+            return true
         } else {
             lastNameErrorMsg.textContent = 'Veuillez renseigner ce champ.';
+            return false
         }
     };
 
@@ -220,8 +217,10 @@ function getForm() {
 
         if (addressRegExp.test(inputAddress.value.trim())) {
             addressErrorMsg.textContent = '';
+            return true
         } else {
             addressErrorMsg.textContent = 'Veuillez renseigner ce champ.';
+            return false
         }
     };
 
@@ -231,8 +230,10 @@ function getForm() {
 
         if (charRegExp.test(inputCity.value.trim())) {
             cityErrorMsg.itextContent = '';
+            return true
         } else {
             cityErrorMsg.textContent = 'Veuillez renseigner ce champ.';
+            return false
         }
     };
 
@@ -242,8 +243,10 @@ function getForm() {
 
         if (emailRegExp.test(inputEmail.value)) {
             emailErrorMsg.textContent = '';
+            return true
         } else {
             emailErrorMsg.textContent = 'Veuillez renseigner votre email.';
+            return false
         }
     };
     }
@@ -266,7 +269,44 @@ for (let i=0; i < productLocalStorage.length; i++){
 }
 quantityTotal()
 
+function confirmation () {
+    let error = validations.find(valid => valid == false)
+    if (error) {
+        return
+    }
+    if(productLocalStorage.length == 0) {
+        alert("Vous ne pouvez pas passee commande, car le panier est vide")
+        return
+    }
+    let products = productLocalStorage.map(product => product.id)
+    console.log(products)
+    let form = document.querySelector(".cart__order__form");
+    let contact = {
+        firstName: form.firstName.value,
+        lastName: form.lastName.value,
+        email: form.email.value,
+        city: form.city.value,
+        address: form.address.value
+    }
+    let data = {products: products, contact: contact}
+    fetch("http://localhost:3000/api/products/order",{
+        method: "POST",
+        headers: {  'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+}
 
+    ).then(response => response.json()).then(response => {
+        console.log(response)
+        localStorage.clear()
+        location.href="confirmation.html?orderId=" + response.orderId
+    })
+}
+
+let bouttonCommande = document.getElementById("order")
+bouttonCommande.addEventListener('click', function(event) {
+    event.preventDefault()
+    confirmation()
+})
 
 
 /*
