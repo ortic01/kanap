@@ -1,6 +1,8 @@
 let section = document.getElementById("items")
 
-// ce code permet de crée une carte de canapé
+//------------------------------------------------------
+// fonction pour creation d'une carte de canapé
+//------------------------------------------------------
 function carte(canape){
     let a = document.createElement("a")
     a.href = "./product.html?id="+canape._id

@@ -7,7 +7,9 @@ let product = null
 let select = document.getElementById("colors")
 let itemQuantity = document.getElementById("quantity")
 
-//affichage des information du canapé
+//------------------------------------------------------
+// fonction des information du canapé
+//------------------------------------------------------
 function information(canape){
     //affichage de l'image
     let img = document.createElement("img")
@@ -47,21 +49,24 @@ fetch("http://localhost:3000/api/products/"+id).then(res => res.json()).then(can
    product = canape
 })
 
-//paramettrage boutton validation
+//------------------------------------------------------
+// fonction du parametre boutton "Ajoute au panier"
+//------------------------------------------------------
 function validation() {
     //recuperation du boutton
     let button = document.getElementById("addToCart")
 
     //clic sur le boutton
     button.addEventListener("click",function(){
-        // console.log("clic sur boutton")
         ajoutPanier()
 
 
       
     })
 }
-// ajout dans le localstorage
+//------------------------------------------------------
+// fonction pour ajouter dans le localStorage
+//------------------------------------------------------
 function ajoutPanier() {
     let color = select.value
     if(!color) {
@@ -97,7 +102,9 @@ function ajoutPanier() {
     localStorage.setItem("panier", JSON.stringify(panier))
     alert("le produit  a été ajoutée")
 }
-
+//------------------------------------------------------
+// fonction du panier
+//------------------------------------------------------
 function getPanier() {
     let panier = localStorage.getItem("panier")
     if(panier == null) {

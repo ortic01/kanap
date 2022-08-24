@@ -1,3 +1,6 @@
+//------------------------------------------------------
+// fonction du panier
+//------------------------------------------------------
 function getPanier() {
     let panier = localStorage.getItem("panier")
     if(panier == null) {
@@ -11,6 +14,9 @@ function getPanier() {
 
 let productLocalStorage = getPanier()
 let section = document.querySelector("#cart__items")
+//------------------------------------------------------
+// fonction pour la cration du panier
+//------------------------------------------------------
 
     // Création de la balise "article" 
 function product(canape, quantiteValue, colorValue) {
@@ -82,7 +88,7 @@ function product(canape, quantiteValue, colorValue) {
     input.value = quantiteValue
     input.addEventListener("change", (event) => {
         if (input.value < 1) {
-            alert("veuillez entrer un nombre suprerieur ou egale a 1")
+            alert("veuillez entrer un nombre superieur ou egale a 1")
             input.value = 1
             
         } else if(input.value > 100) {
@@ -112,21 +118,25 @@ let totalQuantity = document.querySelector("#totalQuantity")
 let productTotalQuantity = 0
 let productTotalPrice = 0
 
-// insertion du prix total
+//------------------------------------------------------
+// fonction pour l'insertion du prix total
+//------------------------------------------------------
 function priceTotal() {
     productTotalPrice = productLocalStorage.reduce((total, product) => total + product.price * product.quantity, 0)
     totalPrice.textContent = productTotalPrice
 }
 
-
-// insertion de la quantité total
+//------------------------------------------------------
+// fonction pour l'insertion de la quantité total
+//------------------------------------------------------
 function quantityTotal() {
     productTotalQuantity = productLocalStorage.reduce((total, product) => total + product.quantity, 0)
     totalQuantity.textContent = productTotalQuantity
 }
 
-
-// changement de la nouvelle quantité + prix
+//------------------------------------------------------
+// fonction pour changement de la nouvelle quantité +le prix
+//------------------------------------------------------
 function changePriceAndQuantity (id, newValue, price, color) {
     let canapetoUpdate = productLocalStorage.find(canape => canape.id === id && canape.color === color)
     let difference = newValue - canapetoUpdate.quantity
@@ -138,7 +148,9 @@ function changePriceAndQuantity (id, newValue, price, color) {
     quantityTotal()
     
 }
-// supprimer un produit en modifiant la quantité et le prix total
+//------------------------------------------------------
+// fonction pour supprimer un produit, la modification de la quantité et du prix sera faite automatiquement
+//------------------------------------------------------
 function deleteProduct(id, color, price) {
     let article = document.querySelector('article[data-id="' + id + '"][data-color="' + color + '"]')
     let canapetoUpdate = productLocalStorage.find(canape => canape.id === id && canape.color === color)
@@ -150,7 +162,9 @@ function deleteProduct(id, color, price) {
     article.remove()
 }  
 let validations = []
-// insertion formulaire 
+//------------------------------------------------------
+// fonction du formulaire
+//------------------------------------------------------ 
 function getForm() {
     // ajoute la class cart__order__form
     let form = document.querySelector(".cart__order__form");
@@ -252,12 +266,14 @@ function getForm() {
     }
 getForm();
 
-
+//------------------------------------------------------
+// fonction sur la recuperation des données du panier sur les canapés
+//------------------------------------------------------
 
 function getCanape(prod) {
     fetch("http://localhost:3000/api/products/"+prod.id).then(res => res.json()).then(canape => {
 
-   product(canape, prod.quantity, prod.color)
+    product(canape, prod.quantity, prod.color)
     productTotalPrice = productTotalPrice + prod.quantity * canape.price
     totalPrice.textContent = productTotalPrice
 })
@@ -269,7 +285,12 @@ for (let i=0; i < productLocalStorage.length; i++){
 }
 quantityTotal()
 
+//------------------------------------------------------
+// fonction sur la confirmation de l'envoie
+//------------------------------------------------------
+
 function confirmation () {
+    // si panier a pas d'articles, l'envoie est impossible
     let error = validations.find(valid => valid == false)
     if (error) {
         return
@@ -281,6 +302,8 @@ function confirmation () {
     let products = productLocalStorage.map(product => product.id)
     console.log(products)
     let form = document.querySelector(".cart__order__form");
+
+    //récuperation des données du formulaire dans un objet
     let contact = {
         firstName: form.firstName.value,
         lastName: form.lastName.value,
@@ -288,50 +311,27 @@ function confirmation () {
         city: form.city.value,
         address: form.address.value
     }
+
+    // envoie du fomulaire et des produit dans le panier + localStorage (data) 
     let data = {products: products, contact: contact}
+    // envoie a la resource api
     fetch("http://localhost:3000/api/products/order",{
         method: "POST",
         headers: {  'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data)
 }
-
+    
     ).then(response => response.json()).then(response => {
         console.log(response)
         localStorage.clear()
+        // envoyé à la page de confirmation 
         location.href="confirmation.html?orderId=" + response.orderId
     })
 }
 
+// click sur le boutton confirmation
 let bouttonCommande = document.getElementById("order")
 bouttonCommande.addEventListener('click', function(event) {
     event.preventDefault()
     confirmation()
-})
-
-
-/*
-if (!productLocalStorage) {
-
-} else {
-
-    for (let i=0; i < productLocalStorage.length; i++) {
-
-
-        let productArticle = document.createElement("article");
-        document.querySelector("#cart__items").appendChild(productArticle);
-        productArticle.className = "cart__item";
-        productArticle.setAttribute("data-id", productLocalStorage[i].id);
-
-        
-        let productDivImg = document.createElement("div");
-        productArticle.appendChild(productDivImg);
-        productDivImg.className = "cart__item__img";
-
-        
-        let productImg = document.createElement("img");
-        productDivImg.appendChild(productImg);
-        productImg.src = productLocalStorage[i].img;
-
- }
-}
-*/
+}) // fin de l'envoie de l'envoie du formulaire
