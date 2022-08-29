@@ -3,6 +3,7 @@ const params = new URLSearchParams(location.search);
 const id = params.get("id")
 console.log(id)
 
+
 let product = null
 let select = document.getElementById("colors")
 let itemQuantity = document.getElementById("quantity")

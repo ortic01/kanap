@@ -95,7 +95,7 @@ function product(canape, quantiteValue, colorValue) {
             alert("veuillez entrer un nombre inferieur ou egale a 100")
             input.value = 100
         }
-        changePriceAndQuantity(canape.id, input.value, canape.price, colorValue )})
+        changePriceAndQuantity(canape._id, input.value, canape.price, colorValue )})
     productDivQuantity.appendChild(input)
 
     // Insertion de l'élément "div"
@@ -148,6 +148,7 @@ function changePriceAndQuantity (id, newValue, price, color) {
     quantityTotal()
     
 }
+
 //------------------------------------------------------
 // fonction pour supprimer un produit, la modification de la quantité et du prix sera faite automatiquement
 //------------------------------------------------------
@@ -329,7 +330,7 @@ function confirmation () {
     })
 }
 
-// click sur le boutton confirmation
+// click sur le boutton commandée
 let bouttonCommande = document.getElementById("order")
 bouttonCommande.addEventListener('click', function(event) {
     event.preventDefault()
