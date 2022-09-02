@@ -275,7 +275,9 @@ const validEmail = function() {
         return false
     }
 };
-
+//------------------------------------------------------
+// fonction avec toute les apelle de fonction du formulaire
+//------------------------------------------------------
     function validationformulaire() {
         validFirstName()
         validLastName()
@@ -309,12 +311,13 @@ quantityTotal()
 //------------------------------------------------------
 
 function confirmation () {
-    // si panier a pas d'articles, l'envoie est impossible
+    // si formulaire non remplie, message d'alerte s'affiche dans les champs correspondant
     let error = validations.find(valid => valid == false)
     if (validations.length < 5 || error) {
         validationformulaire()
         return
     }
+    // si panier a pas d'articles, l'envoie est impossible
     if(productLocalStorage.length == 0) {
         alert("Vous ne pouvez pas passee commande, car le panier est vide")
         return
