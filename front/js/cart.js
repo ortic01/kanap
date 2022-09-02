@@ -163,107 +163,125 @@ function deleteProduct(id, color, price) {
     article.remove()
 }  
 let validations = []
+// ajoute la class cart__order__form
+let form = document.querySelector(".cart__order__form");
+
+ //Création des expressions régulières
+ let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+ let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+ let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+
 //------------------------------------------------------
 // fonction du formulaire
 //------------------------------------------------------ 
 function getForm() {
-    // ajoute la class cart__order__form
-    let form = document.querySelector(".cart__order__form");
-
-    //Création des expressions régulières
-    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-    let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+    
+   
 
     // Ecoute de la modification du prénom
     form.firstName.addEventListener('change', function() {
-        validations[0] = validFirstName(this);
+        validations[0] = validFirstName();
     });
 
     // Ecoute de la modification du nom
     form.lastName.addEventListener('change', function() {
-        validations[1] =  validLastName(this);
+        validations[1] =  validLastName();
     });
 
     // Ecoute de la modification de l'adresse
     form.address.addEventListener('change', function() {
-        validations[2] =  validAddress(this);
+        validations[2] =  validAddress();
     });
 
     // Ecoute de la modification ville
     form.city.addEventListener('change', function() {
-        validations[3] = validCity(this);
+        validations[3] = validCity();
     });
 
    // Ecoute de la modification de l'adresse email
     form.email.addEventListener('change', function() {
-        validations[4] = validEmail(this);
+        validations[4] = validEmail();
     });
 
-    //validation du prénom
-    const validFirstName = function(inputFirstName) {
-        let firstNameErrorMsg = inputFirstName.nextElementSibling;
+    
+    }
+    
+//validation du prénom
+const validFirstName = function() {
+    let inputFirstName = form.firstName
+    let firstNameErrorMsg = inputFirstName.nextElementSibling;
 
-        if (charRegExp.test(inputFirstName.value.trim())) {
-            firstNameErrorMsg.textContent = '';
-            return true
-        } else {
-            firstNameErrorMsg.textContent = 'Veuillez renseigner ce champ.';
-            return false
-        }
-    };
+    if (charRegExp.test(inputFirstName.value.trim())) {
+        firstNameErrorMsg.textContent = '';
+        return true
+    } else {
+        firstNameErrorMsg.textContent = 'Veuillez renseigner ce champ.';
+        return false
+    }
+};
 
-    //validation du nom
-    const validLastName = function(inputLastName) {
-        let lastNameErrorMsg = inputLastName.nextElementSibling;
+//validation du nom
+const validLastName = function() {
+    let inputLastName = form.lastName
+    let lastNameErrorMsg = inputLastName.nextElementSibling;
 
-        if (charRegExp.test(inputLastName.value.trim())) {
-            lastNameErrorMsg.textContent = '';
-            return true
-        } else {
-            lastNameErrorMsg.textContent = 'Veuillez renseigner ce champ.';
-            return false
-        }
-    };
+    if (charRegExp.test(inputLastName.value.trim())) {
+        lastNameErrorMsg.textContent = '';
+        return true
+    } else {
+        lastNameErrorMsg.textContent = 'Veuillez renseigner ce champ.';
+        return false
+    }
+};
 
-    //validation de l'adresse
-    const validAddress = function(inputAddress) {
-        let addressErrorMsg = inputAddress.nextElementSibling;
+//validation de l'adresse
+const validAddress = function() {
+    let inputAddress = form.address
+    let addressErrorMsg = inputAddress.nextElementSibling;
 
-        if (addressRegExp.test(inputAddress.value.trim())) {
-            addressErrorMsg.textContent = '';
-            return true
-        } else {
-            addressErrorMsg.textContent = 'Veuillez renseigner ce champ.';
-            return false
-        }
-    };
+    if (addressRegExp.test(inputAddress.value.trim())) {
+        addressErrorMsg.textContent = '';
+        return true
+    } else {
+        addressErrorMsg.textContent = 'Veuillez renseigner ce champ.';
+        return false
+    }
+};
 
-    //validation de la ville
-    const validCity = function(inputCity) {
-        let cityErrorMsg = inputCity.nextElementSibling;
+//validation de la ville
+const validCity = function() {
+    let inputCity = form.city
+    let cityErrorMsg = inputCity.nextElementSibling;
 
-        if (charRegExp.test(inputCity.value.trim())) {
-            cityErrorMsg.itextContent = '';
-            return true
-        } else {
-            cityErrorMsg.textContent = 'Veuillez renseigner ce champ.';
-            return false
-        }
-    };
+    if (charRegExp.test(inputCity.value.trim())) {
+        cityErrorMsg.itextContent = '';
+        return true
+    } else {
+        cityErrorMsg.textContent = 'Veuillez renseigner ce champ.';
+        return false
+    }
+};
 
-    //validation de l'email
-    const validEmail = function(inputEmail) {
-        let emailErrorMsg = inputEmail.nextElementSibling;
+//validation de l'email
+const validEmail = function() {
+    let inputEmail = form.email
+    let emailErrorMsg = inputEmail.nextElementSibling;
 
-        if (emailRegExp.test(inputEmail.value)) {
-            emailErrorMsg.textContent = '';
-            return true
-        } else {
-            emailErrorMsg.textContent = 'Veuillez renseigner votre email.';
-            return false
-        }
-    };
+    if (emailRegExp.test(inputEmail.value)) {
+        emailErrorMsg.textContent = '';
+        return true
+    } else {
+        emailErrorMsg.textContent = 'Veuillez renseigner votre email.';
+        return false
+    }
+};
+
+    function validationformulaire() {
+        validFirstName()
+        validLastName()
+        validEmail()
+        validCity()
+        validAddress()
     }
 getForm();
 
@@ -293,7 +311,8 @@ quantityTotal()
 function confirmation () {
     // si panier a pas d'articles, l'envoie est impossible
     let error = validations.find(valid => valid == false)
-    if (error) {
+    if (validations.length < 5 || error) {
+        validationformulaire()
         return
     }
     if(productLocalStorage.length == 0) {
